@@ -17,7 +17,7 @@ namespace sandbox {
     template <typename Precision>
     class Sphere {
         public:
-            Sphere(const Point<Precision>& origin, Precision radius) 
+            Sphere(const Point<Precision>& origin, Precision radius)
                 : origin_(origin)
                 , radius_(radius)
             {}
@@ -38,7 +38,11 @@ namespace sandbox {
 
                 Precision discriminant = b * b - 4.0 * a * c;
                 if (discriminant > 0.0) {
-                    return Hit<Precision>(0.0, Point<Precision>(), Point<Precision>());
+                    Precision t         = (-b - std::sqrt(discriminant)) / (2.0 * a);
+                    Point<Precision> p  = ray(t);
+                    Point<Precision> n  = p - origin_;
+
+                    return Hit<Precision>(t, p, n);
                 } else {
                     return {};
                 }

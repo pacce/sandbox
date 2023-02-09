@@ -5,7 +5,7 @@ const std::size_t WIDTH     = 800;
 
 template <typename Precision>
 sandbox::Color
-color(const sandbox::Ray<Precision>& r) {
+background(const sandbox::Ray<Precision>& r) {
     sandbox::Point<Precision> p = r.direction().normalized();
     Precision t = 0.5 * (p.y() + 1.0);
 
@@ -14,6 +14,26 @@ color(const sandbox::Ray<Precision>& r) {
             , (1.0 - t) * 1.0 + t * 0.7
             , (1.0 - t) * 1.0 + t * 1.0
             );
+}
+
+template <typename Precision>
+sandbox::Color
+flat(const std::optional<sandbox::Hit<Precision>>& hit, const sandbox::Ray<Precision>& r) {
+    if (not hit) { return background(r); } else { return sandbox::Color(255, 0, 0); }
+}
+
+template <typename Precision>
+sandbox::Color
+normal(const std::optional<sandbox::Hit<Precision>>& hit, const sandbox::Ray<Precision>& r) {
+    if (not hit) {
+        return background(r);
+    } else {
+        sandbox::Point<Precision> p = hit->normal.normalized();
+        p += sandbox::Point<Precision>(1.0, 1.0, 1.0);
+        p *= 0.5;
+
+        return sandbox::Color::convert(p.x(), p.y(), p.z());
+    }
 }
 
 template <typename Precision>
@@ -31,7 +51,7 @@ struct Fractional {
 };
 
 int
-main(int argc, char** argv) {
+main(int, char**) {
     try {
         sandbox::Aspect aspect  = sandbox::Aspect<float>::fullscreen();
         sandbox::Camera camera  = sandbox::Camera<float>(aspect);
@@ -46,12 +66,10 @@ main(int argc, char** argv) {
         colors.reserve(ws * hs);
         for (std::size_t h = 0; h < hs; h++) {
         for (std::size_t w = 0; w < ws; w++) {
-            sandbox::Ray ray = camera.ray(fraction(w, h));
-            if (not sphere.hit(ray)) {
-                colors.push_back(color(ray));
-            } else {
-                colors.push_back(sandbox::Color(255, 0, 0));
-            }
+            sandbox::Ray ray                        = camera.ray(fraction(w, h));
+            std::optional<sandbox::Hit<float>> hit  = sphere.hit(ray);
+
+            colors.push_back(normal(hit, ray));
         }
         }
         sandbox::png::write("hello.png", colors, ws, hs);

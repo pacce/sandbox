@@ -19,7 +19,7 @@ namespace sandbox {
             Point<Precision>& direction()   { return direction_; }
 
             Point<Precision>
-            operator()(Precision t) {
+            operator()(Precision t) const {
                 return origin_ + t * direction_;
             }
         private:
