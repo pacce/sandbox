@@ -7,16 +7,15 @@ const std::size_t HEIGHT    = 600;
 int
 main(int argc, char** argv) {
     try {
-        sandbox::png::Image image = {};
+        sandbox::Colors colors = {};
+        colors.reserve(WIDTH * HEIGHT);
+
         for (std::size_t w = 0; w < WIDTH; w++) {
         for (std::size_t h = 0; h < HEIGHT; h++) {
-            image.push_back(255);   // Red
-            image.push_back(  0);   // Green
-            image.push_back(  0);   // Blue
-            image.push_back(255);   // Alpha
+            colors.emplace_back(0, 255, 0);
         }
         }
-        sandbox::png::write("hello.png", image, WIDTH, HEIGHT);
+        sandbox::png::write("hello.png", colors, WIDTH, HEIGHT);
         exit(EXIT_SUCCESS);
     } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl;

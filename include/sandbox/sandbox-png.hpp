@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include "sandbox-color.hpp"
+
 namespace sandbox {
 namespace png {
     using Pixel     = uint8_t;
@@ -15,6 +17,9 @@ namespace png {
 
     void
     write(const std::filesystem::path& path, const Image& image, Width ws, Height hs);
+
+    void
+    write(const std::filesystem::path& path, const Colors& colors, Width ws, Height hs);
 } // namespace png
 } // namespace sandbox
 
