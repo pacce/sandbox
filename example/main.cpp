@@ -35,6 +35,7 @@ main(int argc, char** argv) {
     try {
         sandbox::Aspect aspect  = sandbox::Aspect<float>::fullscreen();
         sandbox::Camera camera  = sandbox::Camera<float>(aspect);
+        sandbox::Sphere<float> sphere(sandbox::Point<float>(0.0f, 0.0f, -1.0f), 0.5f);
 
         std::size_t ws  = WIDTH;
         std::size_t hs  = aspect.height(ws);
@@ -43,11 +44,14 @@ main(int argc, char** argv) {
 
         sandbox::Colors colors = {};
         colors.reserve(ws * hs);
-
         for (std::size_t h = 0; h < hs; h++) {
         for (std::size_t w = 0; w < ws; w++) {
             sandbox::Ray ray = camera.ray(fraction(w, h));
-            colors.push_back(color(ray));
+            if (not sphere.hit(ray)) {
+                colors.push_back(color(ray));
+            } else {
+                colors.push_back(sandbox::Color(255, 0, 0));
+            }
         }
         }
         sandbox::png::write("hello.png", colors, ws, hs);
