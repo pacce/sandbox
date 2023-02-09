@@ -64,8 +64,8 @@ main(int, char**) {
 
         sandbox::Colors colors = {};
         colors.reserve(ws * hs);
-        for (std::size_t h = 0; h < hs; h++) {
-        for (std::size_t w = 0; w < ws; w++) {
+        for (std::size_t h = hs; h > 0 ; h--) {
+        for (std::size_t w = 0 ; w < ws; w++) {
             sandbox::Ray ray        = camera.ray(fraction(w, h));
             sandbox::Hit<float> hit = sphere.hit(ray);
 
