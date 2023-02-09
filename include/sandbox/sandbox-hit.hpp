@@ -16,6 +16,23 @@ namespace hit {
     };
 } // namespace hit
     template <typename Precision> using Hit = std::optional<hit::Information<Precision>>;
+namespace hit {
+    template <typename Precision> 
+    Hit<Precision>
+    monad(const std::vector<Hit<Precision>>& hs) {
+        Hit<Precision> value = {};
+        for (const Hit<Precision>& h : hs) {
+            if (not h)      { continue; }
+
+            if (not value) { 
+                value = h;
+            } else {
+                value = (value->t < h->t) ? value : h;
+            }
+        }
+        return value;
+    }
+}
 
     template <typename Precision>
     class Sphere {
@@ -54,6 +71,16 @@ namespace hit {
             Point<Precision>    origin_;
             Precision           radius_;
     };
+
+    template <typename Precision>
+    Hit<Precision>
+    trace(const Ray<Precision>& ray, const std::vector<Sphere<Precision>>& spheres) {
+        std::vector<Hit<Precision>> hs;
+        hs.reserve(spheres.size());
+
+        for (const Sphere<Precision>& sphere : spheres) { hs.push_back(sphere.hit(ray)); }
+        return hit::monad(hs);
+    }
 } // namespace sandbox
 
 #endif // SANDBOX_HIT_HPP__

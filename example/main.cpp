@@ -55,7 +55,13 @@ main(int, char**) {
     try {
         sandbox::Aspect aspect  = sandbox::Aspect<float>::widescreen();
         sandbox::Camera camera  = sandbox::Camera<float>(aspect);
-        sandbox::Sphere<float> sphere(sandbox::Point<float>(0.0f, 0.0f, -1.0f), 0.5f);
+        std::vector<sandbox::Sphere<float>> spheres = {
+              sandbox::Sphere<float>(sandbox::Point<float>( 0.0f,  0.0f, -1.0f), 0.5f)
+            , sandbox::Sphere<float>(sandbox::Point<float>( 1.0f,  0.0f, -1.0f), 0.5f)
+            , sandbox::Sphere<float>(sandbox::Point<float>(-1.0f,  0.0f, -1.0f), 0.5f)
+            , sandbox::Sphere<float>(sandbox::Point<float>( 0.0f,  1.0f, -1.0f), 0.1f)
+            , sandbox::Sphere<float>(sandbox::Point<float>( 0.0f, -1.0f, -1.0f), 0.1f)
+        };
 
         std::size_t ws  = WIDTH;
         std::size_t hs  = aspect.height(ws);
@@ -67,7 +73,7 @@ main(int, char**) {
         for (std::size_t h = hs; h > 0 ; h--) {
         for (std::size_t w = 0 ; w < ws; w++) {
             sandbox::Ray ray        = camera.ray(fraction(w, h));
-            sandbox::Hit<float> hit = sphere.hit(ray);
+            sandbox::Hit<float> hit = sandbox::trace(ray, spheres);
 
             colors.push_back(normal(hit, ray));
         }
