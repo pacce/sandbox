@@ -1,7 +1,7 @@
 #include <iostream>
 #include <sandbox/sandbox.hpp>
 
-const std::size_t WIDTH     = 800;
+const std::size_t WIDTH     = 2560;
 
 template <typename Precision>
 sandbox::Color
@@ -18,13 +18,13 @@ background(const sandbox::Ray<Precision>& r) {
 
 template <typename Precision>
 sandbox::Color
-flat(const std::optional<sandbox::Hit<Precision>>& hit, const sandbox::Ray<Precision>& r) {
+flat(const sandbox::Hit<Precision>& hit, const sandbox::Ray<Precision>& r) {
     if (not hit) { return background(r); } else { return sandbox::Color(255, 0, 0); }
 }
 
 template <typename Precision>
 sandbox::Color
-normal(const std::optional<sandbox::Hit<Precision>>& hit, const sandbox::Ray<Precision>& r) {
+normal(const sandbox::Hit<Precision>& hit, const sandbox::Ray<Precision>& r) {
     if (not hit) {
         return background(r);
     } else {
@@ -53,7 +53,7 @@ struct Fractional {
 int
 main(int, char**) {
     try {
-        sandbox::Aspect aspect  = sandbox::Aspect<float>::fullscreen();
+        sandbox::Aspect aspect  = sandbox::Aspect<float>::widescreen();
         sandbox::Camera camera  = sandbox::Camera<float>(aspect);
         sandbox::Sphere<float> sphere(sandbox::Point<float>(0.0f, 0.0f, -1.0f), 0.5f);
 
@@ -66,8 +66,8 @@ main(int, char**) {
         colors.reserve(ws * hs);
         for (std::size_t h = 0; h < hs; h++) {
         for (std::size_t w = 0; w < ws; w++) {
-            sandbox::Ray ray                        = camera.ray(fraction(w, h));
-            std::optional<sandbox::Hit<float>> hit  = sphere.hit(ray);
+            sandbox::Ray ray        = camera.ray(fraction(w, h));
+            sandbox::Hit<float> hit = sphere.hit(ray);
 
             colors.push_back(normal(hit, ray));
         }

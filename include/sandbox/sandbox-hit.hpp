@@ -7,12 +7,15 @@
 #include "sandbox-ray.hpp"
 
 namespace sandbox {
+namespace hit {
     template <typename Precision>
-    struct Hit {
+    struct Information {
         Precision           t;
         Point<Precision>    point;
         Point<Precision>    normal;
     };
+} // namespace hit
+    template <typename Precision> using Hit = std::optional<hit::Information<Precision>>;
 
     template <typename Precision>
     class Sphere {
@@ -28,7 +31,7 @@ namespace sandbox {
             Point<Precision> origin()   { return origin_; }
             Precision radius()          { return radius_; }
 
-            std::optional<Hit<Precision>>
+            Hit<Precision>
             hit(const Ray<Precision>& ray) const {
                 Point<Precision> p = ray.origin() - origin_;
 
@@ -42,7 +45,7 @@ namespace sandbox {
                     Point<Precision> p  = ray(t);
                     Point<Precision> n  = p - origin_;
 
-                    return Hit<Precision>(t, p, n);
+                    return hit::Information<Precision>(t, p, n);
                 } else {
                     return {};
                 }
