@@ -86,6 +86,18 @@ namespace sandbox {
 
     template <typename Precision>
     using Colors = std::vector<Color<Precision>>;
+namespace colors {
+    template <typename Precision>
+    Color<Precision>
+    fold(const Colors<Precision>& cs) {
+        using Color = Color<Precision>;
+        Precision scale = 1.0 / static_cast<Precision>(cs.size());
+        Color result    = Color::black();
+
+        for (const Color& c : cs) { result += (c * scale); }
+        return result;
+    }
+} // namespace colors
 } // namespace sandbox
 
 #endif // SANDBOX_COLOR_HPP__
