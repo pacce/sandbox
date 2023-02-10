@@ -1,9 +1,11 @@
+#include <omp.h>
+
 #include <iostream>
 #include <random>
 #include <sandbox/sandbox.hpp>
 
-const std::size_t WIDTH     = 1024;
-const std::size_t SAMPLES   = 100;
+const std::size_t WIDTH     = 2560;
+const std::size_t SAMPLES   = 10;
 
 template <typename Precision>
 sandbox::Color<Precision>
@@ -97,23 +99,17 @@ main(int, char**) {
         std::size_t hs  = aspect.height(ws);
 
         Fractional<float> fraction = {ws, hs};
-        Random<float> random;
 
-        sandbox::Colors<float> colors = {};
-        colors.reserve(ws * hs);
-        for (std::size_t h = hs; h > 0 ; h--) {
-        for (std::size_t w = 0 ; w < ws; w++) {
-            sandbox::Colors<float> cs;
-            cs.reserve(SAMPLES);
+        sandbox::Colors<float> colors(ws * hs);
 
-            for (std::size_t sample = 0; sample < SAMPLES; sample++) {
-                sandbox::Ray ray        = camera.ray(fraction(w, h, random));
-                sandbox::Hit<float> hit = sandbox::trace(ray, spheres);
+ #pragma omp parallel for collapse(2)
+        for (std::size_t h = 0; h < hs; h++) {
+        for (std::size_t w = 0; w < ws; w++) {
+            std::size_t index = (h * ws) + w; 
 
-                cs.push_back(normal(hit, ray));
-            }
-
-            colors.push_back(sandbox::colors::fold(cs));
+            sandbox::Ray ray        = camera.ray(fraction(w, h));
+            sandbox::Hit<float> hit = sandbox::trace(ray, spheres);
+            colors[index]           = normal(hit, ray);
         }
         }
         sandbox::png::write("hello.png", colors, ws, hs);
