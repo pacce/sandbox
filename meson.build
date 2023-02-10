@@ -3,7 +3,7 @@ project('sandbox', 'cpp', version : '0.1.0', default_options : ['warning_level=3
 dependencies  = [
     dependency('geometry')
   , dependency('libpng', required: true)
-  , dependency('openmp')
+  # , dependency('openmp')
   ]
 sources       = [
   'source/sandbox-png.cpp'

@@ -72,16 +72,6 @@ namespace hit {
             Point<Precision>    origin_;
             Precision           radius_;
     };
-
-    template <typename Precision>
-    Hit<Precision>
-    trace(const Ray<Precision>& ray, const std::vector<Sphere<Precision>>& spheres) {
-        std::vector<Hit<Precision>> hs;
-        hs.reserve(spheres.size());
-
-        for (const Sphere<Precision>& sphere : spheres) { hs.push_back(sphere.hit(ray)); }
-        return hit::monad(hs);
-    }
 } // namespace sandbox
 
 #endif // SANDBOX_HIT_HPP__

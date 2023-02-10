@@ -5,6 +5,8 @@
 #include "sandbox-color.hpp"
 #include "sandbox-hit.hpp"
 #include "sandbox-png.hpp"
+#include "sandbox-random.hpp"
 #include "sandbox-ray.hpp"
+#include "sandbox-trace.hpp"
 
 #endif // SANDBOX_HPP__
