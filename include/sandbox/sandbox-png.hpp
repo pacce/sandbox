@@ -67,9 +67,9 @@ namespace png {
             for (std::size_t w = 0; w < ws; w++) {
                 std::size_t index = ((h * ws) + w);
 
-                *row++  = colors[index].red();
-                *row++  = colors[index].green();
-                *row++  = colors[index].blue();
+                *row++  = colors[index].r();
+                *row++  = colors[index].g();
+                *row++  = colors[index].b();
                 *row++  = 255;
             }
         }

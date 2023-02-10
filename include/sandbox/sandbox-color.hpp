@@ -27,9 +27,57 @@ namespace sandbox {
                 return os;
             }
 
-            Channel red() const     { return static_cast<Channel>(r_ * 255.0f);}
-            Channel green() const   { return static_cast<Channel>(g_ * 255.0f);}
-            Channel blue() const    { return static_cast<Channel>(b_ * 255.0f);}
+            Channel r() const     { return static_cast<Channel>(r_ * 255.0f);}
+            Channel g() const   { return static_cast<Channel>(g_ * 255.0f);}
+            Channel b() const    { return static_cast<Channel>(b_ * 255.0f);}
+
+            Color<Precision>&
+            operator*=(const Precision& scale) {
+                r_ = std::clamp<Precision>(r_ * scale, 0.0, 1.0);
+                g_ = std::clamp<Precision>(g_ * scale, 0.0, 1.0);
+                b_ = std::clamp<Precision>(b_ * scale, 0.0, 1.0);
+
+                return *this;
+            }
+
+            friend Color<Precision>
+            operator*(const Color<Precision>& c, const Precision& scale) {
+                Color<Precision> xs = c;
+                xs *= scale;
+
+                return xs;
+            }
+
+            friend Color<Precision>
+            operator*(const Precision& scale, const Color<Precision>& c) {
+                Color<Precision> xs = c;
+                xs *= scale;
+
+                return xs;
+            }
+
+            Color<Precision>&
+            operator+=(const Color<Precision>& rhs) {
+                r_ = std::clamp<Precision>(r_ + rhs.r_, 0.0, 1.0);
+                g_ = std::clamp<Precision>(g_ + rhs.g_, 0.0, 1.0);
+                b_ = std::clamp<Precision>(b_ + rhs.b_, 0.0, 1.0);
+
+                return *this;
+            }
+
+            friend Color<Precision>
+            operator+(const Color<Precision>& lhs, const Color<Precision>& rhs) {
+                Color<Precision> xs = lhs;
+                xs += rhs;
+
+                return xs;
+            }
+
+            static Color<Precision> white() { return Color<Precision>(1.0, 1.0, 1.0); }
+            static Color<Precision> red()   { return Color<Precision>(1.0, 0.0, 0.0); }
+            static Color<Precision> green() { return Color<Precision>(0.0, 1.0, 0.0); }
+            static Color<Precision> blue()  { return Color<Precision>(0.0, 0.0, 1.0); }
+            static Color<Precision> black() { return Color<Precision>(0.0, 0.0, 0.0); }
         private:
             Precision r_;
             Precision g_;

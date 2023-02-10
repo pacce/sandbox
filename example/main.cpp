@@ -6,20 +6,19 @@ const std::size_t WIDTH     = 2560;
 template <typename Precision>
 sandbox::Color<Precision>
 background(const sandbox::Ray<Precision>& r) {
-    sandbox::Point<Precision> p = r.direction().normalized();
+    using Point = sandbox::Point<Precision>;
+    using Color = sandbox::Color<Precision>;
+
+    Point p     = r.direction().normalized();
     Precision t = 0.5 * (p.y() + 1.0);
 
-    return sandbox::Color<Precision>(
-              (1.0 - t) * 1.0 + t * 0.5
-            , (1.0 - t) * 1.0 + t * 0.7
-            , (1.0 - t) * 1.0 + t * 1.0
-            );
+    return (1.0 - t) * Color::white() + t * Color(0.5, 0.7, 1.0);
 }
 
 template <typename Precision>
 sandbox::Color<Precision>
 flat(const sandbox::Hit<Precision>& hit, const sandbox::Ray<Precision>& r) {
-    if (not hit) { return background(r); } else { return sandbox::Color<Precision>(1.0, 0.0, 0.0); }
+    if (not hit) { return background(r); } else { return sandbox::Color<Precision>::red(); }
 }
 
 template <typename Precision>
