@@ -6,6 +6,7 @@
 #include "sandbox-point.hpp"
 #include "sandbox-random.hpp"
 #include "sandbox-ray.hpp"
+#include "sandbox-sphere.hpp"
 
 namespace sandbox {
     template <typename Precision>
@@ -57,7 +58,7 @@ namespace sandbox {
             Random<Precision> random;
             Point<Precision> p = hit->normal + random.sphere().normalized();
 
-            return 0.5 * trace(Ray<Precision>(hit->point, p), spheres, depth--);
+            return hit->color * trace(Ray<Precision>(hit->point, p), spheres, depth--);
         }
     }
 } // namespace sandbox

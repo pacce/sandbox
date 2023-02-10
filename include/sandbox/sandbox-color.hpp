@@ -58,6 +58,23 @@ namespace sandbox {
             }
 
             Color<Precision>&
+            operator*=(const Color<Precision>& rhs) {
+                r_ = std::clamp<Precision>(r_ * rhs.r_, 0.0, 1.0);
+                g_ = std::clamp<Precision>(g_ * rhs.g_, 0.0, 1.0);
+                b_ = std::clamp<Precision>(b_ * rhs.b_, 0.0, 1.0);
+
+                return *this;
+            }
+
+            friend Color<Precision>
+            operator*(const Color<Precision>& lhs, const Color<Precision>& rhs) {
+                Color<Precision> xs = lhs;
+                xs *= rhs;
+
+                return xs;
+            }
+
+            Color<Precision>&
             operator+=(const Color<Precision>& rhs) {
                 r_ = std::clamp<Precision>(r_ + rhs.r_, 0.0, 1.0);
                 g_ = std::clamp<Precision>(g_ + rhs.g_, 0.0, 1.0);

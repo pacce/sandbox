@@ -3,6 +3,7 @@
 
 #include <optional>
 
+#include "sandbox-color.hpp"
 #include "sandbox-point.hpp"
 #include "sandbox-ray.hpp"
 
@@ -13,6 +14,7 @@ namespace hit {
         Precision           t;
         Point<Precision>    point;
         Point<Precision>    normal;
+        Color<Precision>    color;
     };
 } // namespace hit
     template <typename Precision> using Hit = std::optional<hit::Information<Precision>>;
@@ -33,45 +35,6 @@ namespace hit {
         return value;
     }
 }
-
-    template <typename Precision>
-    class Sphere {
-        public:
-            Sphere(const Point<Precision>& origin, Precision radius)
-                : origin_(origin)
-                , radius_(radius)
-            {}
-
-            const Point<Precision> origin() const   { return origin_; }
-            const Precision radius() const          { return radius_; }
-
-            Point<Precision> origin()   { return origin_; }
-            Precision radius()          { return radius_; }
-
-            Hit<Precision>
-            hit(const Ray<Precision>& ray) const {
-                Point<Precision> p = ray.origin() - origin_;
-
-                Precision a = ray.direction().dot(ray.direction());
-                Precision b = 2.0 * p.dot(ray.direction());
-                Precision c = p.dot(p) - radius_ * radius_;
-
-                Precision discriminant = b * b - 4.0 * a * c;
-                if (discriminant > 0.0) {
-                    Precision t         = (-b - std::sqrt(discriminant)) / (2.0 * a);
-                    if (t < 0.0) { return {}; }
-
-                    Point<Precision> p  = ray(t);
-                    Point<Precision> n  = p - origin_;
-                    return hit::Information<Precision>(t, p, n);
-                } else {
-                    return {};
-                }
-            }
-        private:
-            Point<Precision>    origin_;
-            Precision           radius_;
-    };
 } // namespace sandbox
 
 #endif // SANDBOX_HIT_HPP__
