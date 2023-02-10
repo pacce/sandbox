@@ -59,9 +59,10 @@ namespace hit {
                 Precision discriminant = b * b - 4.0 * a * c;
                 if (discriminant > 0.0) {
                     Precision t         = (-b - std::sqrt(discriminant)) / (2.0 * a);
+                    if (t < 0.0) { return {}; }
+
                     Point<Precision> p  = ray(t);
                     Point<Precision> n  = p - origin_;
-
                     return hit::Information<Precision>(t, p, n);
                 } else {
                     return {};
