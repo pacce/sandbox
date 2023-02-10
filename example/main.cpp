@@ -66,7 +66,7 @@ main(int, char**) {
                 sandbox::Ray ray    = camera.ray(fraction(w, h, random));
                 cs.push_back(sandbox::trace(ray, spheres, 5));
             }
-            colors[index] = sandbox::colors::fold(cs);
+            colors[index] = sandbox::colors::fold(cs).gamma();
         }
         }
         sandbox::png::write("hello.png", colors, ws, hs);

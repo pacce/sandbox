@@ -2,6 +2,7 @@
 #define SANDBOX_COLOR_HPP__
 
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <ostream>
 #include <type_traits>
@@ -71,6 +72,15 @@ namespace sandbox {
                 xs += rhs;
 
                 return xs;
+            }
+
+            Color<Precision>&
+            gamma() {
+                r_ = std::sqrt(r_);
+                g_ = std::sqrt(g_);
+                b_ = std::sqrt(b_);
+
+                return *this;
             }
 
             static Color<Precision> white() { return Color<Precision>(1.0, 1.0, 1.0); }

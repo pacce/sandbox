@@ -55,7 +55,7 @@ namespace sandbox {
             return background(ray);
         } else {
             Random<Precision> random;
-            Point<Precision> p = hit->normal + random.sphere();
+            Point<Precision> p = hit->normal + random.sphere().normalized();
 
             return 0.5 * trace(Ray<Precision>(hit->point, p), spheres, depth--);
         }
