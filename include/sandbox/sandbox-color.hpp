@@ -4,49 +4,40 @@
 #include <algorithm>
 #include <cstdint>
 #include <ostream>
+#include <type_traits>
 #include <vector>
 
 namespace sandbox {
     using Channel = uint8_t;
 
+    template <typename Precision>
     class Color {
+        static_assert(std::is_floating_point<Precision>::value);
         public:
-            Color() : Color(0, 0, 0) {}
-            Color(Channel r, Channel g, Channel b) : red_(r), green_(g), blue_(b) {}
-
-            template <typename Precision>
-            static Color
-            convert(Precision r, Precision g, Precision b) {
-                static_assert(std::is_floating_point<Precision>::value);
-
-                r = std::clamp<Precision>(r, 0.0, 1.0) * 255.0;
-                g = std::clamp<Precision>(g, 0.0, 1.0) * 255.0;
-                b = std::clamp<Precision>(b, 0.0, 1.0) * 255.0;
-
-                return Color(static_cast<Channel>(r), static_cast<Channel>(g), static_cast<Channel>(b));
-            }
+             Color() : Color(0.0, 0.0, 0.0) {}
+             Color(Precision r, Precision g, Precision b) 
+                : r_(std::clamp<Precision>(r, 0.0, 1.0))
+                , g_(std::clamp<Precision>(g, 0.0, 1.0))
+                , b_(std::clamp<Precision>(b, 0.0, 1.0))
+            {}
 
             friend std::ostream&
             operator<<(std::ostream& os, const Color& color) {
-                os  << color.red_
-                    << ", "
-                    << color.green_
-                    << ", "
-                    << color.blue_
-                    ;
+                os << color.r_ << ", " << color.g_ << ", " << color.b_;
                 return os;
             }
 
-            Channel red() const     { return red_;}
-            Channel green() const   { return green_;}
-            Channel blue() const    { return blue_;}
+            Channel red() const     { return static_cast<Channel>(r_ * 255.0f);}
+            Channel green() const   { return static_cast<Channel>(g_ * 255.0f);}
+            Channel blue() const    { return static_cast<Channel>(b_ * 255.0f);}
         private:
-            Channel red_;
-            Channel green_;
-            Channel blue_;
+            Precision r_;
+            Precision g_;
+            Precision b_;
     };
 
-    using Colors = std::vector<Color>;
+    template <typename Precision>
+    using Colors = std::vector<Color<Precision>>;
 } // namespace sandbox
 
 #endif // SANDBOX_COLOR_HPP__

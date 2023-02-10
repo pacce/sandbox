@@ -4,12 +4,12 @@
 const std::size_t WIDTH     = 2560;
 
 template <typename Precision>
-sandbox::Color
+sandbox::Color<Precision>
 background(const sandbox::Ray<Precision>& r) {
     sandbox::Point<Precision> p = r.direction().normalized();
     Precision t = 0.5 * (p.y() + 1.0);
 
-    return sandbox::Color::convert(
+    return sandbox::Color<Precision>(
               (1.0 - t) * 1.0 + t * 0.5
             , (1.0 - t) * 1.0 + t * 0.7
             , (1.0 - t) * 1.0 + t * 1.0
@@ -17,13 +17,13 @@ background(const sandbox::Ray<Precision>& r) {
 }
 
 template <typename Precision>
-sandbox::Color
+sandbox::Color<Precision>
 flat(const sandbox::Hit<Precision>& hit, const sandbox::Ray<Precision>& r) {
-    if (not hit) { return background(r); } else { return sandbox::Color(255, 0, 0); }
+    if (not hit) { return background(r); } else { return sandbox::Color<Precision>(1.0, 0.0, 0.0); }
 }
 
 template <typename Precision>
-sandbox::Color
+sandbox::Color<Precision>
 normal(const sandbox::Hit<Precision>& hit, const sandbox::Ray<Precision>& r) {
     if (not hit) {
         return background(r);
@@ -32,7 +32,7 @@ normal(const sandbox::Hit<Precision>& hit, const sandbox::Ray<Precision>& r) {
         p += sandbox::Point<Precision>(1.0, 1.0, 1.0);
         p *= 0.5;
 
-        return sandbox::Color::convert(p.x(), p.y(), p.z());
+        return sandbox::Color<Precision>(p.x(), p.y(), p.z());
     }
 }
 
@@ -56,11 +56,8 @@ main(int, char**) {
         sandbox::Aspect aspect  = sandbox::Aspect<float>::widescreen();
         sandbox::Camera camera  = sandbox::Camera<float>(aspect);
         std::vector<sandbox::Sphere<float>> spheres = {
-              sandbox::Sphere<float>(sandbox::Point<float>( 0.0f,  0.0f, -1.0f), 0.5f)
-            , sandbox::Sphere<float>(sandbox::Point<float>( 1.0f,  0.0f, -1.0f), 0.5f)
-            , sandbox::Sphere<float>(sandbox::Point<float>(-1.0f,  0.0f, -1.0f), 0.5f)
-            , sandbox::Sphere<float>(sandbox::Point<float>( 0.0f,  1.0f, -1.0f), 0.1f)
-            , sandbox::Sphere<float>(sandbox::Point<float>( 0.0f, -1.0f, -1.0f), 0.1f)
+              sandbox::Sphere<float>(sandbox::Point<float>( 0.0f,    0.0f, -1.0f),   0.5f)
+            , sandbox::Sphere<float>(sandbox::Point<float>( 0.0f, -100.5f, -1.0f), 100.0f)
         };
 
         std::size_t ws  = WIDTH;
@@ -68,7 +65,7 @@ main(int, char**) {
 
         Fractional<float> fraction = {ws, hs};
 
-        sandbox::Colors colors = {};
+        sandbox::Colors<float> colors = {};
         colors.reserve(ws * hs);
         for (std::size_t h = hs; h > 0 ; h--) {
         for (std::size_t w = 0 ; w < ws; w++) {
