@@ -13,7 +13,7 @@ namespace sandbox {
             Sphere(
                       const Point<Precision>&       origin
                     , Precision                     radius
-                    , const Lambertian<Precision>&  material
+                    , const Material<Precision>&    material
                     )
                 : origin_(origin)
                 , radius_(radius)
@@ -41,16 +41,19 @@ namespace sandbox {
 
                     Point<Precision> p  = ray(t);
                     Point<Precision> n  = p - origin_;
-                    return hit::Information<Precision>(t, p, n, material_.albedo());
+                    return hit::Information<Precision>(t, p, n, this->color());
                 } else {
                     return {};
                 }
             }
         private:
+            Color<Precision>
+            color() const { return std::visit(albedo_, material_); }
             Point<Precision>        origin_;
             Precision               radius_;
 
-            Lambertian<Precision>   material_;
+            Material<Precision>                     material_;
+            material::visitor::Albedo<Precision>    albedo_;
     };
 } // namespace sandbox
 
