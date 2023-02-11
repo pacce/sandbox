@@ -56,10 +56,7 @@ namespace sandbox {
         if (not hit) {
             return background(ray);
         } else {
-            std::optional<Ray<Precision>> scatter = std::visit(
-                      material::visitor::Scatter<Precision>(ray, *hit)
-                    , hit->material
-                    );
+            ray::Scattered<Precision> scatter = material::scatter(ray, *hit);
 
             if (not scatter) {
                 return Color::black();

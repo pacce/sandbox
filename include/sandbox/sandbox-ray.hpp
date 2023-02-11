@@ -1,6 +1,7 @@
 #ifndef SANDBOX_RAY_HPP__
 #define SANDBOX_RAY_HPP__
 
+#include <optional>
 #include "sandbox-point.hpp"
 
 namespace sandbox {
@@ -26,6 +27,11 @@ namespace sandbox {
             Point<Precision> origin_;
             Point<Precision> direction_;
     };
+
+namespace ray {
+    template <typename Precision>
+    using Scattered = std::optional<Ray<Precision>>;
+} // namespace ray
 } // namespace sandbox
 
 #endif // SANDBOX_RAY_HPP__

@@ -79,13 +79,19 @@ namespace visitor {
                 , information_(information) {
                 }
 
-            std::optional<Ray<Precision>> operator()(const Lambertian<Precision>& v) const { return v(incident_, information_); }
-            std::optional<Ray<Precision>> operator()(const Metal<Precision>& v) const      { return v(incident_, information_); }
+            ray::Scattered<Precision> operator()(const Lambertian<Precision>& v) const { return v(incident_, information_); }
+            ray::Scattered<Precision> operator()(const Metal<Precision>& v) const      { return v(incident_, information_); }
         private:
             Ray<Precision>              incident_;
             hit::Information<Precision> information_;
     };
 } // namespace visitor
+    template <typename Precision>
+    ray::Scattered<Precision>
+    scatter(const Ray<Precision>& incident, const hit::Information<Precision>& information) {
+        visitor::Scatter<Precision> visitor(incident, information);
+        return std::visit(visitor, information.material);
+    }
 } // namespace material
 } // namespace sandbox
 

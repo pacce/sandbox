@@ -41,7 +41,7 @@ namespace hit {
         }
         return value;
     }
-}
+} // namespace hit
 } // namespace sandbox
 
 #endif // SANDBOX_HIT_HPP__
