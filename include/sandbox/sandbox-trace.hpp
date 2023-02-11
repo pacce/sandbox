@@ -46,6 +46,7 @@ namespace sandbox {
     trace(const Ray<Precision>& ray, const std::vector<Sphere<Precision>>& spheres, std::size_t depth = 0) {
         using Color = sandbox::Color<Precision>;
         if (depth == 0) { return Color::black(); }
+
         std::vector<Hit<Precision>> hs;
         hs.reserve(spheres.size());
 
@@ -55,10 +56,16 @@ namespace sandbox {
         if (not hit) {
             return background(ray);
         } else {
-            Random<Precision> random;
-            Point<Precision> p = hit->normal + random.sphere().normalized();
+            std::optional<Ray<Precision>> scatter = std::visit(
+                      material::visitor::Scatter<Precision>(ray, *hit)
+                    , hit->material
+                    );
 
-            return hit->color * trace(Ray<Precision>(hit->point, p), spheres, depth--);
+            if (not scatter) {
+                return Color::black();
+            } else {
+                return hit->color * trace(*scatter, spheres, depth--);
+            }
         }
     }
 } // namespace sandbox

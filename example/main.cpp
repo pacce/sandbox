@@ -5,7 +5,7 @@
 #include <sandbox/sandbox.hpp>
 
 const std::size_t WIDTH     = 2560;
-const std::size_t SAMPLES   = 100;
+const std::size_t SAMPLES   = 10;
 
 template <typename Precision>
 struct Fractional {
@@ -41,6 +41,7 @@ using Color         = sandbox::Color<float>;
 using Colors        = sandbox::Colors<float>;
 using Point         = sandbox::Point<float>;
 using Lambertian    = sandbox::Lambertian<float>;
+using Metal         = sandbox::Metal<float>;
 using Sphere        = sandbox::Sphere<float>;
 
 int
@@ -49,8 +50,8 @@ main(int, char**) {
         sandbox::Aspect aspect  = sandbox::Aspect<float>::widescreen();
         sandbox::Camera camera  = sandbox::Camera<float>(aspect);
         std::vector<Sphere> spheres = {
-              Sphere(Point( 0.0f,    0.0f, -1.0f),   0.5f, Lambertian(Color(0.9f, 0.1f, 0.1f)))
-            , Sphere(Point( 0.0f,  100.5f, -1.0f), 100.0f, Lambertian(Color(0.1f, 0.1f, 0.1f)))
+              Sphere(Point( 0.0f,    0.0f, -1.0f),   0.5f, Metal(Color(0.1f, 0.9f, 0.1f)))
+            , Sphere(Point( 0.0f,  100.5f, -1.0f), 100.0f, Lambertian(Color(0.9f, 0.1f, 0.1f)))
         };
 
         std::size_t ws  = WIDTH;
