@@ -41,6 +41,7 @@ namespace sandbox {
 
                     Point<Precision> p  = ray(t);
                     Point<Precision> n  = p - origin_;
+                    n.normalize();
                     return hit::Information<Precision>(
                               t                 // t
                             , p                 // point
