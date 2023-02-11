@@ -50,8 +50,10 @@ main(int, char**) {
         sandbox::Aspect aspect  = sandbox::Aspect<float>::widescreen();
         sandbox::Camera camera  = sandbox::Camera<float>(aspect);
         std::vector<Sphere> spheres = {
-              Sphere(Point( 0.0f,    0.0f, -1.0f),   0.5f, Metal(Color(0.1f, 0.9f, 0.1f)))
-            , Sphere(Point( 0.0f,  100.5f, -1.0f), 100.0f, Lambertian(Color(0.9f, 0.1f, 0.1f)))
+              Sphere(Point( 0.0f,    0.0f, -1.0f),   0.5f, Lambertian(Color(0.7f, 0.3f, 0.3f)))
+            , Sphere(Point( 0.0f,  100.5f, -1.0f), 100.0f, Lambertian(Color(0.8f, 0.8f, 0.0f)))
+            , Sphere(Point(-1.0f,    0.0f, -1.0f),   0.5f, Metal(Color(0.8f, 0.8f, 0.8f)))
+            , Sphere(Point( 1.0f,    0.0f, -1.0f),   0.5f, Metal(Color(0.8f, 0.6f, 0.2f)))
         };
 
         std::size_t ws  = WIDTH;
