@@ -12,8 +12,8 @@ namespace sandbox {
     class Engine {
         static_assert(std::is_floating_point<Precision>::value);
         public:
-            Engine(sandbox::Resolution resolution, std::size_t samples) 
-                : camera_(resolution)
+            Engine(sandbox::Resolution resolution, const FoV<Precision>& fov, std::size_t samples)
+                : camera_(fov, resolution)
                 , ws_(sandbox::resolution::width(resolution))
                 , hs_(sandbox::resolution::height(resolution))
                 , fraction_{ws_, hs_}
@@ -26,7 +26,7 @@ namespace sandbox {
 
                 for (std::size_t h = (hs_ - 1); h > 0; h--) {
                 for (std::size_t w = 0; w < ws_; w++) {
-                    std::size_t index = (h * ws_) + w; 
+                    std::size_t index = (h * ws_) + w;
 
                     Colors<Precision> cs;
                     cs.reserve(samples_);

@@ -26,7 +26,11 @@ main(int, char**) {
             , Sphere(Point( 1.0f,    0.0f, -1.0f),   0.5f, Brushed(Color(0.8f, 0.6f, 0.2f), 1.0))
         };
 
-        sandbox::Engine<float> engine(sandbox::Resolution::r800x600, SAMPLES);
+        sandbox::Engine<float> engine(
+                  sandbox::Resolution::r800x600
+                , sandbox::FoV<float>::degrees(120.0f)
+                , SAMPLES
+                );
         sandbox::Colors<float> colors = engine(spheres);
         sandbox::png::write("hello.png", colors, engine.width(), engine.height());
 

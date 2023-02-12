@@ -2,6 +2,7 @@
 #define SANDBOX_CAMERA_HPP__
 
 #include <cstdint>
+#include <numbers>
 #include <type_traits>
 
 #include "sandbox-point.hpp"
@@ -10,12 +11,30 @@
 
 namespace sandbox {
     template <typename Precision>
+    class FoV {
+        static_assert(std::is_floating_point<Precision>::value);
+        public:
+            FoV(Precision radians) : radians_(radians) {}
+
+            static FoV
+            degrees(Precision value) {
+                Precision radians  = (value * std::numbers::pi_v<Precision>) / 180.0;
+                return FoV(radians);
+            }
+
+            Precision
+            height() const { return std::tan(radians_ / 2.0); }
+        private:
+            Precision radians_;
+    };
+
+    template <typename Precision>
     class Camera {
         public:
-            Camera(Resolution resolution) : Camera(Aspect<Precision>(resolution)) {}
-            Camera(const Aspect<Precision>& aspect) {
-                Precision vh    = 2.0;              // viewport height
-                Precision vw    = aspect.width(vh); // viewport width
+            Camera(const FoV<Precision>& fov, Resolution resolution) : Camera(fov, Aspect<Precision>(resolution)) {}
+            Camera(const FoV<Precision>& fov, const Aspect<Precision>& aspect) {
+                Precision vh    = fov.height() * 2.0f;  // viewport height
+                Precision vw    = aspect.width(vh);     // viewport width
 
                 origin_     = Point<Precision>::zero();
                 horizontal_ = Point<Precision>( vw, 0.0, 0.0);
