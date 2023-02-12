@@ -7,8 +7,11 @@ const std::size_t SAMPLES   = 10;
 using Color         = sandbox::Color<float>;
 using Colors        = sandbox::Colors<float>;
 using Point         = sandbox::Point<float>;
+
 using Lambertian    = sandbox::Lambertian<float>;
 using Metal         = sandbox::Metal<float>;
+using Brushed       = sandbox::Brushed<float>;
+
 using Sphere        = sandbox::Sphere<float>;
 
 int
@@ -17,11 +20,11 @@ main(int, char**) {
         std::vector<Sphere> spheres = {
               Sphere(Point( 0.0f,    0.0f, -1.0f),   0.5f, Lambertian(Color(0.7f, 0.3f, 0.3f)))
             , Sphere(Point( 0.0f,  100.5f, -1.0f), 100.0f, Lambertian(Color(0.8f, 0.8f, 0.0f)))
-            , Sphere(Point(-1.0f,    0.0f, -1.0f),   0.5f, Metal(Color(0.8f, 0.8f, 0.8f)))
-            , Sphere(Point( 1.0f,    0.0f, -1.0f),   0.5f, Metal(Color(0.8f, 0.6f, 0.2f)))
+            , Sphere(Point(-1.0f,    0.0f, -1.0f),   0.5f, Brushed(Color(0.8f, 0.8f, 0.8f), 0.3))
+            , Sphere(Point( 1.0f,    0.0f, -1.0f),   0.5f, Brushed(Color(0.8f, 0.6f, 0.2f), 1.0))
         };
 
-        sandbox::Engine<float> engine(sandbox::Resolution::r2560x1080, SAMPLES);
+        sandbox::Engine<float> engine(sandbox::Resolution::r800x600, SAMPLES);
         sandbox::Colors<float> colors = engine(spheres);
         sandbox::png::write("hello.png", colors, engine.width(), engine.height());
 
