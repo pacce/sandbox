@@ -21,6 +21,8 @@ main(int, char**) {
         std::vector<Sphere> spheres = {
               Sphere(Point( 0.0f,    0.0f, -1.0f),   0.5f, Lambertian(Color(0.7f, 0.3f, 0.3f)))
             , Sphere(Point( 0.0f,    0.0f,  2.0f),   1.5f, Light(Color(1.0f, 1.0f, 1.0f)))
+            , Sphere(Point(-2.0f,    0.0f,  3.0f),   0.2f, Light(Color(0.6f, 0.0f, 0.0f)))
+            , Sphere(Point(-2.0f,    0.0f,  0.0f),   0.2f, Light(Color(0.0f, 0.6f, 0.0f)))
             , Sphere(Point( 0.0f, -100.5f, -1.0f), 100.0f, Lambertian(Color(0.8f, 0.8f, 0.0f)))
             , Sphere(Point(-1.0f,    0.0f, -1.0f),   0.5f, Brushed(Color(0.8f, 0.8f, 0.8f), 0.3))
             , Sphere(Point( 1.0f,    0.0f, -1.0f),   0.5f, Brushed(Color(0.8f, 0.6f, 0.2f), 1.0))
