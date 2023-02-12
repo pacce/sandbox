@@ -42,10 +42,13 @@ namespace sandbox {
                     Point<Precision> p  = ray(t);
                     Point<Precision> n  = p - origin_;
                     n.normalize();
+
+                    bool frontal = (ray.direction().dot(n) > 0.0);
                     return hit::Information<Precision>(
                               t                 // t
                             , p                 // point
                             , n                 // normal
+                            , frontal           // ray is outside the sphere
                             , this->color()     // color
                             , this->material_   // material
                             );

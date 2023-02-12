@@ -25,8 +25,11 @@ namespace hit {
     template <typename Precision>
     struct Information {
         Precision           t;
+
         Point<Precision>    point;
         Point<Precision>    normal;
+        bool                frontal;
+
         Color<Precision>    color;
         Material<Precision> material;
     };
