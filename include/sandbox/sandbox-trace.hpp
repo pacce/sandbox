@@ -53,7 +53,7 @@ namespace sandbox {
         Hit<Precision> hit = hit::monad(hs);
 
         if (not hit) {
-            return Color<Precision>::black();
+            return 0.1 * background(ray);
         } else {
             ray::Scattered<Precision> scattered = material::scatter(ray, *hit);
             Color<Precision> emitted            = material::emitter(*hit);
