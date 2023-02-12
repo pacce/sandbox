@@ -12,8 +12,8 @@ namespace sandbox {
     class Engine {
         static_assert(std::is_floating_point<Precision>::value);
         public:
-            Engine(sandbox::Resolution resolution, const FoV<Precision>& fov, std::size_t samples)
-                : camera_(fov, resolution)
+            Engine(sandbox::Resolution resolution, const Camera<Precision>& camera, std::size_t samples)
+                : camera_(camera)
                 , ws_(sandbox::resolution::width(resolution))
                 , hs_(sandbox::resolution::height(resolution))
                 , fraction_{ws_, hs_}
@@ -32,7 +32,7 @@ namespace sandbox {
                     cs.reserve(samples_);
                     for (std::size_t sample = 0; sample < samples_; sample++) {
                         sandbox::Ray ray    = camera_.ray(fraction_(w, h, random_));
-                        cs.push_back(trace(ray, spheres, 100));
+                        cs.push_back(trace(ray, spheres, 10));
                     }
                     colors[index] = colors::fold(cs).gamma();
                 }

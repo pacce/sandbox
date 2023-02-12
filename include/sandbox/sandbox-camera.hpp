@@ -31,15 +31,25 @@ namespace sandbox {
     template <typename Precision>
     class Camera {
         public:
-            Camera(const FoV<Precision>& fov, Resolution resolution) : Camera(fov, Aspect<Precision>(resolution)) {}
-            Camera(const FoV<Precision>& fov, const Aspect<Precision>& aspect) {
+            Camera(
+                      const Point<Precision>&   from
+                    , const Point<Precision>&   at
+                    , const Point<Precision>&   up
+                    , const FoV<Precision>&     fov
+                    , const Aspect<Precision>&  aspect
+                    )
+            {
                 Precision vh    = fov.height() * 2.0f;  // viewport height
                 Precision vw    = aspect.width(vh);     // viewport width
 
-                origin_     = Point<Precision>::zero();
-                horizontal_ = Point<Precision>( vw, 0.0, 0.0);
-                vertical_   = Point<Precision>(0.0,  vh, 0.0);
-                corner_     = origin_ - (horizontal_ + vertical_) * 0.5 - Point<Precision>(0.0, 0.0, 1.0);
+                Point<Precision> w = (from - at).normalized();
+                Point<Precision> u = (up.cross(w)).normalized();
+                Point<Precision> v = w.cross(u);
+
+                origin_     = from;
+                horizontal_ = vw * u;
+                vertical_   = vh * v;
+                corner_     = origin_ - (horizontal_ + vertical_) * 0.5 - w;
             }
 
             Camera() : Camera(Aspect<Precision>::widescreen()) {}
