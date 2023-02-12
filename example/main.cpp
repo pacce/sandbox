@@ -2,7 +2,7 @@
 #include <random>
 #include <sandbox/sandbox.hpp>
 
-const std::size_t SAMPLES   = 100;
+const std::size_t SAMPLES   = 50;
 
 using Color         = sandbox::Color<float>;
 using Colors        = sandbox::Colors<float>;
