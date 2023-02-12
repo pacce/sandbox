@@ -6,26 +6,9 @@
 
 #include "sandbox-point.hpp"
 #include "sandbox-ray.hpp"
+#include "sandbox-resolution.hpp"
 
 namespace sandbox {
-    template <typename Precision>
-    class Aspect {
-        static_assert(std::is_floating_point<Precision>::value);
-        public:
-            explicit Aspect(Precision ratio) : ratio_(ratio) {}
-            explicit Aspect(uint8_t x, uint8_t y) {
-                ratio_ = static_cast<Precision>(x) / static_cast<Precision>(y);
-            }
-
-            static Aspect fullscreen() { return Aspect(4, 3); }
-            static Aspect widescreen() { return Aspect(16, 9); }
-
-            Precision width(Precision height) const { return ratio_ * height; }
-            Precision height(Precision width) const { return width / ratio_; }
-        private:
-            Precision ratio_;
-    };
-
     template <typename Precision>
     class Camera {
         public:
