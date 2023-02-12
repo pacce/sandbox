@@ -12,12 +12,14 @@ namespace sandbox {
     template <typename Precision> class Lambertian;
     template <typename Precision> class Metal;
     template <typename Precision> class Brushed;
+    template <typename Precision> class Light;
 
     template <typename Precision>
     using Material = std::variant<
           Lambertian<Precision>
         , Metal<Precision>
         , Brushed<Precision>
+        , Light<Precision>
         >;
 namespace hit {
     template <typename Precision>

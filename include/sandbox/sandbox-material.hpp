@@ -52,7 +52,6 @@ namespace sandbox {
             reflect(const Point<Precision>& v, const Point<Precision>& n){
                 return v - 2.0 * v.dot(n) * n;
             }
-            Random<Precision> random_;
             Color<Precision> albedo_;
     };
 
@@ -87,6 +86,22 @@ namespace sandbox {
             Color<Precision>    albedo_;
             Precision           perturbation_;
     };
+
+    template <typename Precision>
+    class Light {
+        public:
+            Light(const Color<Precision>& color) : color_(color) {}
+
+            std::optional<Ray<Precision>>
+            operator()(const Ray<Precision>&, const hit::Information<Precision>&) const {
+                return {};
+            }
+
+            const Color<Precision>& color() const   { return color_; }
+            Color<Precision>& color()               { return color_; }
+        private:
+            Color<Precision> color_;
+    };
 namespace material {
 namespace visitor {
     template <typename Precision>
@@ -95,6 +110,7 @@ namespace visitor {
             Color<Precision> operator()(const Lambertian<Precision>& v) const   { return v.albedo(); }
             Color<Precision> operator()(const Metal<Precision>& v) const        { return v.albedo(); }
             Color<Precision> operator()(const Brushed<Precision>& v) const      { return v.albedo(); }
+            Color<Precision> operator()(const Light<Precision>&) const          { return Color<Precision>::black(); }
         private:
     };
 
@@ -112,9 +128,20 @@ namespace visitor {
             ray::Scattered<Precision> operator()(const Lambertian<Precision>& v) const  { return v(incident_, information_); }
             ray::Scattered<Precision> operator()(const Metal<Precision>& v) const       { return v(incident_, information_); }
             ray::Scattered<Precision> operator()(const Brushed<Precision>& v) const     { return v(incident_, information_); }
+            ray::Scattered<Precision> operator()(const Light<Precision>& v) const       { return v(incident_, information_); }
         private:
             Ray<Precision>              incident_;
             hit::Information<Precision> information_;
+    };
+
+    template <typename Precision>
+    class Emitter {
+        public:
+            Color<Precision> operator()(const Lambertian<Precision>&) const { return Color<Precision>::black(); }
+            Color<Precision> operator()(const Metal<Precision>&) const      { return Color<Precision>::black(); }
+            Color<Precision> operator()(const Brushed<Precision>&) const    { return Color<Precision>::black(); }
+            Color<Precision> operator()(const Light<Precision>& v) const    { return v.color(); }
+        private:
     };
 } // namespace visitor
     template <typename Precision>
@@ -122,6 +149,12 @@ namespace visitor {
     scatter(const Ray<Precision>& incident, const hit::Information<Precision>& information) {
         visitor::Scatter<Precision> visitor(incident, information);
         return std::visit(visitor, information.material);
+    }
+
+    template <typename Precision>
+    Color<Precision>
+    emitter(const hit::Information<Precision>& information) {
+        return std::visit(visitor::Emitter<Precision>(), information.material);
     }
 } // namespace material
 } // namespace sandbox

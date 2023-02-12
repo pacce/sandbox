@@ -44,8 +44,7 @@ namespace sandbox {
     template <typename Precision>
     sandbox::Color<Precision>
     trace(const Ray<Precision>& ray, const std::vector<Sphere<Precision>>& spheres, std::size_t depth = 0) {
-        using Color = sandbox::Color<Precision>;
-        if (depth == 0) { return Color::black(); }
+        if (depth == 0) { return Color<Precision>::black(); }
 
         std::vector<Hit<Precision>> hs;
         hs.reserve(spheres.size());
@@ -54,14 +53,15 @@ namespace sandbox {
         Hit<Precision> hit = hit::monad(hs);
 
         if (not hit) {
-            return background(ray);
+            return Color<Precision>::black();
         } else {
-            ray::Scattered<Precision> scatter = material::scatter(ray, *hit);
+            ray::Scattered<Precision> scattered = material::scatter(ray, *hit);
+            Color<Precision> emitted            = material::emitter(*hit);
 
-            if (not scatter) {
-                return Color::black();
+            if (not scattered) {
+                return emitted;
             } else {
-                return hit->color * trace(*scatter, spheres, depth--);
+                return emitted + hit->color * trace(*scattered, spheres, depth--);
             }
         }
     }
