@@ -12,6 +12,7 @@ namespace sandbox {
     template <typename Precision>
     class Camera {
         public:
+            Camera(Resolution resolution) : Camera(Aspect<Precision>(resolution)) {}
             Camera(const Aspect<Precision>& aspect) {
                 Precision vh    = 2.0;              // viewport height
                 Precision vw    = aspect.width(vh); // viewport width
